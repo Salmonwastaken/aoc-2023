@@ -11,6 +11,91 @@ import (
 )
 
 func main() {
+	// part1()
+	part2()
+}
+
+type Card struct {
+	cards int
+	wins  int
+}
+
+type Cards map[int]*Card
+
+func part2() {
+	var cardNumber int
+	var totalCards int
+	// cardNumber:[cardAmount winAmount]
+	cardMap := make(Cards)
+	file, err := os.Open("input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+
+	// Init for every original line
+	for i := 1; i <= 6; i++ {
+		cardMap[i] = &Card{}
+	}
+
+	for scanner.Scan() {
+		cardNumber++
+		cardMap[cardNumber].cards += 1
+		var winningNumbers []string
+
+		// Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
+		l := strings.Split(scanner.Text(), ": ")[1]
+		// 41 48 83 86 17 | 83 86  6 31 17  9 48 53
+		mw := strings.Split(l, " | ")
+		// w(inning): 41 48 83 86 17
+		// m(ine): 83 86 6 31 17 9 48 53
+		w := mw[0]
+		m := mw[1]
+
+		// [41 48 83 86 17]
+		// [83 86  6 31 17  9 48 53]
+		wSlice := strings.Split(w, " ")
+		mSlice := strings.Split(m, " ")
+
+		// Trim whitespace characters
+		// [83 86 6 31 17 9 48 53]
+		for i := range mSlice {
+			if mSlice[i] == "" {
+				mSlice[i] = mSlice[len(mSlice)-1]
+			}
+		}
+
+		// Count winning numbers
+		for _, v := range wSlice {
+			if slices.Contains(mSlice, v) {
+				winningNumbers = append(winningNumbers, v)
+			}
+		}
+
+		wins := len(winningNumbers)
+
+		cardMap[cardNumber].wins = wins
+
+		if wins == 0 {
+			continue
+		}
+
+		// +1 to the card+i for every win
+		for i := 1; i <= wins; i++ {
+			cardMap[cardNumber+i].cards += 1
+		}
+	}
+	for cardNumber, card := range cardMap {
+		for i := 1; i <= card.wins; i++ {
+			cardMap[cardNumber+i].cards += 1
+		}
+		totalCards += card.cards
+	}
+	fmt.Println(totalCards)
+}
+
+func part1() {
 	var totalScore float64
 
 	file, err := os.Open("input.txt")
