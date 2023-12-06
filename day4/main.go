@@ -35,7 +35,7 @@ func part2() {
 	scanner := bufio.NewScanner(file)
 
 	// Init for every original line
-	for i := 1; i <= 6; i++ {
+	for i := 1; i <= 206; i++ {
 		cardMap[i] = &Card{}
 	}
 
@@ -76,22 +76,16 @@ func part2() {
 		wins := len(winningNumbers)
 
 		cardMap[cardNumber].wins = wins
-
-		if wins == 0 {
-			continue
-		}
-
-		// +1 to the card+i for every win
-		for i := 1; i <= wins; i++ {
-			cardMap[cardNumber+i].cards += 1
-		}
 	}
-	for cardNumber, card := range cardMap {
-		for i := 1; i <= card.wins; i++ {
-			cardMap[cardNumber+i].cards += 1
+	for cardNumber := 1; cardNumber <= len(cardMap); cardNumber++ {
+		for j := 1; j <= cardMap[cardNumber].cards; j++ {
+			for i := 1; i <= cardMap[cardNumber].wins; i++ {
+				cardMap[cardNumber+i].cards += 1
+			}
 		}
-		totalCards += card.cards
+		totalCards += cardMap[cardNumber].cards
 	}
+
 	fmt.Println(totalCards)
 }
 
