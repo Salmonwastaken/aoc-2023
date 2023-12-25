@@ -105,10 +105,6 @@ func generateAddressBook(scanner *bufio.Scanner) ([]string, []string, addresses)
 	return instructionSet, startingPoints, addressBook
 }
 
-// TODO: Try and implement this:
-// https://stackoverflow.com/questions/3154454/what-is-the-most-efficient-way-to-calculate-the-least-common-multiple-of-two-int#3154503
-// !! For each starting A node you calculate only the number of steps between the first Z node and when it gets back to that same Z node !!
-// you can then get the LCM between them to determine when they will end up in the same iteration or cycle with some MATHs.
 func part2() {
 	file, err := os.Open("input.txt")
 	if err != nil {
